@@ -29,7 +29,7 @@ muestra a los docentes **métricas pedagógicas** de esas actividades.
   - Tarea: los pasos de la actividad, con Empezar/Finalizar y cronómetro.
   - Mensajes del docente.
   - Mi clase: las otras actividades asignadas de la misma clase.
-- Glosario con pictogramas: **pendiente**.
+- Glosario con pictogramas.
 
 El sistema muestra datos en bruto (conteos, tiempos, porcentajes). La
 interpretación pedagógica queda siempre a cargo del docente.
