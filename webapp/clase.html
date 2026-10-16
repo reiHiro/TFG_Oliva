@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clase — Apoyos Educativos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<body class="bg-body-tertiary">
+  <nav class="navbar encabezado shadow-sm" data-bs-theme="dark">
+    <div class="container">
+      <span class="navbar-brand mb-0 h1">Apoyos Educativos</span>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <span class="text-white" id="encabezado-saludo"></span>
+        <button type="button" class="btn btn-outline-light btn-sm" id="btn-cerrar-sesion">Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Actividades de una clase del docente (HU-014): clase.html?id=N.
+       Editar, dar de baja y reactivar sus actividades (HU-015, baja lógica:
+       no se borra nada). -->
+  <main class="container py-5">
+    <nav aria-label="Migas de pan">
+      <ol class="breadcrumb mb-3">
+        <li class="breadcrumb-item"><a href="panel-docente.html">Mis clases</a></li>
+        <li class="breadcrumb-item active" aria-current="page" id="miga-clase">Clase</li>
+      </ol>
+    </nav>
+
+    <div id="alerta" class="alert d-none" role="alert"></div>
+    <!-- Avisos de éxito: quedan fuera de los modales porque los modales se cierran. -->
+    <div id="mensaje-panel" role="status" aria-live="polite"></div>
+
+    <p id="cargando" class="text-body-secondary">Cargando clase…</p>
+
+    <div id="no-encontrada" class="d-none">
+      <h1 class="h4">Clase no encontrada</h1>
+      <p class="text-body-secondary">
+        La clase no existe, no es tuya o está dada de baja (podés reactivarla desde
+        "Ver clases dadas de baja" en Mis clases).
+      </p>
+      <a href="panel-docente.html">&larr; Volver a mis clases</a>
+    </div>
+
+    <div id="contenido-clase" class="d-none">
+      <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
+        <div>
+          <!-- tabindex="-1": el foco viene acá cuando desaparece la fila que lo tenía. -->
+          <h1 class="h4 mb-1" id="clase-nombre" tabindex="-1"></h1>
+          <p class="mb-1" id="clase-materia"></p>
+          <p class="text-body-secondary mb-0" id="clase-descripcion"></p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <!-- Se habilita al elegir actividades con las casillas de la tabla. -->
+          <button type="button" class="btn btn-outline-primary" id="btn-metricas-clase" disabled>Métricas de la clase</button>
+          <a class="btn btn-primary" id="btn-crear-actividad" href="actividad-nueva.html">Crear actividad</a>
+        </div>
+      </div>
+
+      <p id="vacio" class="text-body-secondary d-none">
+        Esta clase todavía no tiene actividades. Usá el botón Crear actividad para agregar la primera.
+      </p>
+
+      <div id="contenedor-tabla" class="card shadow-sm d-none">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0" aria-labelledby="clase-nombre">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <input class="form-check-input" type="checkbox" id="actividades-todas" autocomplete="off"
+                         title="Seleccionar todas" aria-label="Seleccionar todas las actividades">
+                </th>
+                <th scope="col">Título</th>
+                <th scope="col">Recurso</th>
+                <th scope="col" class="text-center">Pasos</th>
+                <th scope="col">Creada</th>
+                <th scope="col" class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="lista-actividades"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Solo se muestra si hay alguna. -->
+      <section id="seccion-bajas" class="mt-5 d-none" aria-labelledby="titulo-bajas">
+        <h2 class="h5 mb-1" id="titulo-bajas">Actividades dadas de baja</h2>
+        <p class="text-body-secondary small">Los estudiantes no las ven. No se borró nada: podés ver sus métricas o reactivarlas.</p>
+        <div class="card shadow-sm">
+          <div class="table-responsive">
+            <table class="table align-middle mb-0" aria-labelledby="titulo-bajas">
+              <thead>
+                <tr>
+                  <th scope="col">Título</th>
+                  <th scope="col">Dada de baja</th>
+                  <th scope="col" class="text-end">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="lista-bajas"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Modal para asignar una actividad a estudiantes -->
+  <div class="modal fade" id="modal-asignar" tabindex="-1" aria-labelledby="modal-asignar-titulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <form id="form-asignar" class="modal-content" novalidate>
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="modal-asignar-titulo">Asignar actividad</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-3">
+            Actividad: <strong id="asignar-actividad-titulo"></strong>
+          </p>
+
+          <div id="alerta-asignar" class="alert d-none" role="alert"></div>
+
+          <p id="estudiantes-cargando" class="text-body-secondary">Cargando estudiantes…</p>
+          <p id="estudiantes-vacio" class="text-body-secondary d-none">
+            No hay estudiantes registrados.
+          </p>
+
+          <fieldset id="estudiantes-lista" class="d-none">
+            <legend class="form-label fs-6">Elegí los estudiantes</legend>
+            <div class="form-check mb-2 border-bottom pb-2">
+              <input class="form-check-input" type="checkbox" id="estudiantes-todos">
+              <label class="form-check-label" for="estudiantes-todos">Seleccionar todos</label>
+            </div>
+            <div id="estudiantes-casillas"></div>
+          </fieldset>
+
+          <!-- HU-019: se muestra junto con la lista de estudiantes -->
+          <div id="opcion-correo" class="form-check border-top pt-3 mt-3 d-none">
+            <input class="form-check-input" type="checkbox" id="asignar-correo" checked>
+            <label class="form-check-label" for="asignar-correo">Enviar por correo a los estudiantes al asignar</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="btn-asignar">Asignar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para confirmar la baja de una actividad -->
+  <div class="modal fade" id="modal-baja" tabindex="-1" aria-labelledby="modal-baja-titulo"
+       aria-describedby="modal-baja-texto" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="modal-baja-titulo">Dar de baja la actividad</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="mensaje-baja" role="status" aria-live="polite"></div>
+          <p class="mb-0" id="modal-baja-texto"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="btn-cancelar-baja">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="btn-confirmar-baja">Dar de baja</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/encabezado.js"></script>
+  <script src="js/clases.js"></script>
+  <script src="js/clase.js"></script>
+</body>
+</html>

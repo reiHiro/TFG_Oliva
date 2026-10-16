@@ -1,0 +1,2 @@
+# Librerías de terceros: solo las incluye el backend, nunca se piden por web.
+Require all denied

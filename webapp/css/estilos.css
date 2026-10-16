@@ -1,0 +1,416 @@
+/*
+ * Ajustes puntuales de marca sobre Bootstrap 5.
+ * Layout, formularios, botones y alertas los resuelve Bootstrap:
+ * acá solo van colores propios o detalles chicos.
+ */
+
+:root {
+  --verde-institucional: #1B5E3F;
+  --verde-institucional-hover: #164A32;
+}
+
+/* Botón principal: Bootstrap 5.3 lo pinta con variables --bs-btn-*,
+   así que alcanza con redefinirlas. */
+.btn-primary {
+  --bs-btn-bg: var(--verde-institucional);
+  --bs-btn-border-color: var(--verde-institucional);
+  --bs-btn-hover-bg: var(--verde-institucional-hover);
+  --bs-btn-hover-border-color: var(--verde-institucional-hover);
+  --bs-btn-active-bg: var(--verde-institucional-hover);
+  --bs-btn-active-border-color: var(--verde-institucional-hover);
+  --bs-btn-disabled-bg: var(--verde-institucional);
+  --bs-btn-disabled-border-color: var(--verde-institucional);
+}
+
+/* Links de texto */
+a {
+  color: var(--verde-institucional);
+}
+
+a:hover {
+  color: var(--verde-institucional-hover);
+}
+
+/* Métricas (HU-009): barras de progreso, insignias e indicadores en verde. */
+.progress-bar {
+  background-color: var(--verde-institucional);
+}
+
+.insignia-apoyo {
+  background-color: var(--verde-institucional);
+  color: #fff;
+}
+
+.indicador {
+  border-top: 4px solid var(--verde-institucional);
+}
+
+/* Fila de las cuatro tarjetas de métricas. Un solo alto para toda la fila
+   (grid-auto-rows) y align-items: stretch: las cuatro quedan iguales y no
+   crecen ni se achican con el contenido. Una columna en pantallas chicas,
+   tres + "Pasos con más dificultad" debajo en md, las cuatro en línea en lg. */
+.fila-indicadores {
+  --alto-indicadores: 15rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: var(--alto-indicadores);
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.fila-indicadores > .card {
+  min-height: 0;
+}
+
+@media (min-width: 768px) {
+  .fila-indicadores {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .fila-indicadores > .indicador-dificultad {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 992px) {
+  .fila-indicadores {
+    grid-template-columns: repeat(3, 1fr) 1.5fr;
+  }
+
+  .fila-indicadores > .indicador-dificultad {
+    grid-column: auto;
+  }
+}
+
+/* Número y etiqueta centrados en vertical dentro del alto de la fila. */
+.indicador-centrado {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* "Pasos con más dificultad": el título queda fijo y la lista scrollea por
+   dentro (overflow-y: auto no muestra barra si todo entra). */
+.indicador-dificultad .card-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.lista-dificultad-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: .25rem;
+}
+
+/* El margen del último paso (mb-3, con !important) no debe forzar el scroll. */
+.lista-dificultad-scroll li:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Métricas de la clase: el panel "Pasos con más dificultad" no crece más que
+   esto; pasado ese alto scrollea la lista (.lista-dificultad-scroll) y el
+   título queda fijo. "Apoyos usados", al lado, se estira al mismo alto. */
+.panel-dificultad-clase {
+  max-height: 24rem;
+}
+
+/* Nueva actividad: el selector de tipo no se estira como la descripción,
+   y las opciones quedan sangradas bajo su paso. */
+.tipo-paso {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.opciones-paso {
+  margin-left: 2.75rem;
+}
+
+.correcta-opcion:checked {
+  background-color: var(--verde-institucional);
+  border-color: var(--verde-institucional);
+}
+
+/* Panel docente: ícono de copiar enlace, al lado de "Abrir recurso". */
+.boton-copiar {
+  color: var(--bs-secondary-color);
+  line-height: 1;
+}
+
+.boton-copiar:hover,
+.boton-copiar.copiado {
+  color: var(--verde-institucional);
+}
+
+/* Encabezado de las páginas con sesión: barra verde institucional.
+   data-bs-theme="dark" en la <nav> deja la marca en blanco. */
+.encabezado {
+  background-color: var(--verde-institucional);
+}
+
+/* Login y registro: dos paneles de alto completo (ilustración a la
+   izquierda, formulario a la derecha). En mobile la ilustración pasa a
+   ser una franja angosta arriba. */
+.pagina-acceso {
+  --verde-oscuro: #0E3D2A;
+  --papel: #F1F4EE;
+  --linea-reposo: #D7E0D4;
+  --tinta: #17241F;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: var(--tinta);
+  background-color: var(--papel);
+}
+
+.pagina-acceso h1,
+.pagina-acceso h2 {
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+.acceso {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.acceso-ilustracion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem;
+  background-color: var(--verde-oscuro);
+}
+
+.acceso-ilustracion img {
+  width: 100%;
+  max-width: 140px;
+  height: auto;
+}
+
+.acceso-formulario {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  background-color: var(--papel);
+}
+
+.acceso-contenido {
+  width: 100%;
+  max-width: 26rem;
+}
+
+.acceso-titulo {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: .5rem;
+}
+
+.acceso-subtitulo {
+  color: #4A5A52;
+  margin-bottom: 2rem;
+}
+
+/* Campos con una sola línea abajo en vez de caja con sombra. */
+.pagina-acceso .form-label {
+  font-weight: 600;
+  font-size: .875rem;
+  margin-bottom: .25rem;
+}
+
+.pagina-acceso .form-control,
+.pagina-acceso .form-select {
+  border: 0;
+  border-bottom: 2px solid var(--linea-reposo);
+  border-radius: 0;
+  background-color: transparent;
+  padding-left: 0;
+  color: var(--tinta);
+  transition: border-color .15s ease-in-out;
+}
+
+.pagina-acceso .form-control:focus,
+.pagina-acceso .form-select:focus {
+  border-bottom-color: var(--tinta);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.pagina-acceso .form-control.is-invalid,
+.pagina-acceso .form-select.is-invalid {
+  border-bottom-color: var(--bs-form-invalid-border-color);
+  box-shadow: none;
+}
+
+.btn-acceso {
+  --bs-btn-bg: var(--verde-oscuro);
+  --bs-btn-border-color: var(--verde-oscuro);
+  --bs-btn-color: var(--papel);
+  --bs-btn-hover-bg: var(--tinta);
+  --bs-btn-hover-border-color: var(--tinta);
+  --bs-btn-hover-color: var(--papel);
+  --bs-btn-active-bg: var(--tinta);
+  --bs-btn-active-border-color: var(--tinta);
+  --bs-btn-active-color: var(--papel);
+  --bs-btn-disabled-bg: var(--verde-oscuro);
+  --bs-btn-disabled-border-color: var(--verde-oscuro);
+  --bs-btn-disabled-color: var(--papel);
+  width: 14rem;
+  max-width: 100%;
+  padding: .7rem 1rem;
+  font-weight: 600;
+}
+
+.acceso-cruzado {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+}
+
+.acceso-cruzado a {
+  color: var(--verde-institucional);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.acceso-cruzado a:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+  .acceso {
+    flex-direction: row;
+  }
+
+  .acceso-ilustracion,
+  .acceso-formulario {
+    flex: 1 1 50%;
+    padding: 3rem;
+  }
+
+  .acceso-formulario {
+    align-items: center;
+  }
+
+  .acceso-ilustracion img {
+    max-width: 420px;
+  }
+}
+
+/* Bienvenida tras un login exitoso: capa verde oscura que deja ver el
+   formulario esfumado atrás, saludo con subida + fundido y cinco barras
+   doradas que suben y bajan como un ecualizador. */
+.bienvenida {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem;
+  background-color: rgba(14, 61, 42, .92);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+
+.bienvenida.visible {
+  opacity: 1;
+}
+
+.bienvenida-texto {
+  margin: 0;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.15;
+  text-align: center;
+  color: #F1F4EE;
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.bienvenida.visible .bienvenida-texto {
+  animation: bienvenida-subir 500ms ease-out 150ms forwards;
+}
+
+.bienvenida-barras {
+  display: flex;
+  align-items: flex-end;
+  gap: .4rem;
+  height: 2.5rem;
+}
+
+.bienvenida-barras span {
+  width: .45rem;
+  height: 100%;
+  border-radius: .25rem;
+  background-color: #C9972E;
+  transform-origin: bottom;
+  transform: scaleY(.35);
+  animation: bienvenida-ecualizador 900ms ease-in-out infinite alternate;
+}
+
+.bienvenida-barras span:nth-child(1) { animation-delay: 0ms; }
+.bienvenida-barras span:nth-child(2) { animation-delay: -450ms; }
+.bienvenida-barras span:nth-child(3) { animation-delay: -150ms; }
+.bienvenida-barras span:nth-child(4) { animation-delay: -600ms; }
+.bienvenida-barras span:nth-child(5) { animation-delay: -300ms; }
+
+@keyframes bienvenida-subir {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bienvenida-ecualizador {
+  from { transform: scaleY(.3); }
+  to   { transform: scaleY(1); }
+}
+
+/* Sin movimiento: la capa y el saludo aparecen directo y las barras
+   quedan quietas a distintas alturas. */
+@media (prefers-reduced-motion: reduce) {
+  .bienvenida {
+    transition: none;
+  }
+
+  .bienvenida.visible .bienvenida-texto {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .bienvenida-barras span {
+    animation: none;
+  }
+
+  .bienvenida-barras span:nth-child(1) { transform: scaleY(.45); }
+  .bienvenida-barras span:nth-child(2) { transform: scaleY(.8); }
+  .bienvenida-barras span:nth-child(3) { transform: scaleY(1); }
+  .bienvenida-barras span:nth-child(4) { transform: scaleY(.65); }
+  .bienvenida-barras span:nth-child(5) { transform: scaleY(.4); }
+}
+
+/* Tarjetas de "Mis clases" (panel-docente): la parte de arriba de la
+   tarjeta es un enlace (.enlace-clase) y abajo van los botones Editar y
+   Dar de baja. El foco con teclado se marca con un contorno bien visible
+   adentro de la tarjeta, no solo con el cambio de sombra del hover. */
+.tarjeta-clase {
+  transition: box-shadow .15s ease-in-out, border-color .15s ease-in-out;
+}
+
+.tarjeta-clase:has(.enlace-clase:hover) {
+  border-color: var(--verde-institucional);
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .12) !important;
+}
+
+.enlace-clase:focus-visible {
+  outline: 3px solid var(--verde-institucional);
+  outline-offset: -3px;
+  border-radius: var(--bs-card-inner-border-radius);
+}

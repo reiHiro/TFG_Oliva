@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Métricas — Apoyos Educativos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<body class="bg-body-tertiary">
+  <nav class="navbar encabezado shadow-sm" data-bs-theme="dark">
+    <div class="container">
+      <span class="navbar-brand mb-0 h1">Apoyos Educativos</span>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <span class="text-white" id="encabezado-saludo"></span>
+        <button type="button" class="btn btn-outline-light btn-sm" id="btn-cerrar-sesion">Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <a href="panel-docente.html" class="d-inline-block mb-3" id="enlace-volver">&larr; Volver a mis clases</a>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+      <div>
+        <h1 class="h4 mb-1">Métricas</h1>
+        <p class="text-body-secondary mb-0" id="actividad-titulo"></p>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <small class="text-body-secondary" id="ultima-actualizacion"></small>
+        <button type="button" class="btn btn-primary" id="btn-actualizar">Actualizar</button>
+      </div>
+    </div>
+
+    <div id="alerta" class="alert d-none" role="alert"></div>
+    <!-- Avisos de éxito (HU-016: Tarea reabierta). Queda siempre en la página. -->
+    <div id="mensaje-panel" role="status" aria-live="polite"></div>
+
+    <p id="cargando" class="text-body-secondary">Cargando métricas…</p>
+
+    <div id="contenido" class="d-none">
+      <!-- Cuatro tarjetas del mismo alto fijo (ver .fila-indicadores en estilos.css) -->
+      <div class="fila-indicadores mb-4">
+        <div class="card shadow-sm indicador">
+          <div class="card-body indicador-centrado">
+            <p class="text-body-secondary mb-1">Tiempo en foco promedio</p>
+            <p class="h3 mb-0" id="ind-foco">00:00</p>
+            <small class="text-body-secondary">entre los que la abrieron</small>
+          </div>
+        </div>
+        <div class="card shadow-sm indicador">
+          <div class="card-body indicador-centrado">
+            <p class="text-body-secondary mb-1">Pasos completados</p>
+            <p class="h3 mb-0" id="ind-pasos">—</p>
+            <small class="text-body-secondary" id="ind-pasos-detalle"></small>
+          </div>
+        </div>
+        <div class="card shadow-sm indicador">
+          <div class="card-body indicador-centrado">
+            <p class="text-body-secondary mb-1">Estudiantes que la abrieron</p>
+            <p class="h3 mb-0" id="ind-abrieron">0 de 0</p>
+            <small class="text-body-secondary">con al menos un registro</small>
+          </div>
+        </div>
+
+        <!-- Pasos con más dificultad (HU-010): la lista scrollea por dentro -->
+        <div class="card shadow-sm indicador indicador-dificultad">
+          <div class="card-body">
+            <h2 class="h6 text-body-secondary fw-normal mb-3">Pasos con más dificultad</h2>
+            <div class="lista-dificultad-scroll">
+              <p id="dificultad-vacio" class="text-body-secondary small mb-0 d-none"></p>
+              <ol id="lista-dificultad" class="list-unstyled mb-0"></ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p id="vacio" class="text-body-secondary d-none">
+        Esta actividad todavía no está asignada a ningún estudiante.
+      </p>
+
+      <div id="contenedor-tabla" class="card shadow-sm d-none">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th scope="col">Estudiante</th>
+                <th scope="col">Tiempo en foco</th>
+                <th scope="col" style="min-width: 10rem;">Pasos</th>
+                <th scope="col" title="Pasos de opción múltiple contestados bien, sobre los que respondió">Correctas</th>
+                <th scope="col">Apoyos usados</th>
+                <th scope="col" title="Último envío del enlace personal por correo">Correo</th>
+                <th scope="col" class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="lista-estudiantes"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal con el detalle de un estudiante -->
+  <div class="modal fade" id="modal-detalle" tabindex="-1" aria-labelledby="modal-detalle-titulo" aria-hidden="true">
+    <!-- Ancho: en cada paso van lado a lado lo que escribió el estudiante y
+         la justificación del docente (HU-018). -->
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="modal-detalle-titulo">Detalle</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="alerta-detalle" class="alert d-none" role="alert"></div>
+          <!-- Aviso al guardar la marca "Justificación válida" (HU-018); queda
+               siempre en el modal para que el lector de pantalla lo anuncie. -->
+          <div id="mensaje-marca" class="small" role="status"></div>
+          <p id="detalle-cargando" class="text-body-secondary">Cargando detalle…</p>
+
+          <div id="detalle-contenido" class="d-none">
+            <p id="detalle-sin-actividad" class="text-body-secondary fst-italic d-none">
+              Sin actividad registrada.
+            </p>
+
+            <h3 class="h6">Tiempo en foco</h3>
+            <p id="detalle-foco" class="mb-3"></p>
+
+            <h3 class="h6">Pasos</h3>
+            <p id="detalle-sin-pasos" class="text-body-secondary d-none">La actividad no tiene pasos.</p>
+            <ul id="detalle-pasos" class="list-group mb-3"></ul>
+
+            <h3 class="h6">Apoyos usados</h3>
+            <p id="detalle-sin-apoyos" class="text-body-secondary d-none">No usó ningún apoyo.</p>
+            <ul id="detalle-apoyos" class="list-group"></ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para enviar una devolución a un estudiante -->
+  <div class="modal fade" id="modal-devolucion" tabindex="-1" aria-labelledby="modal-devolucion-titulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="modal-devolucion-titulo">Enviar devolución</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="alerta-devolucion" class="alert d-none" role="alert"></div>
+
+          <form id="form-devolucion" novalidate>
+            <label for="devolucion-texto" class="form-label">Devolución</label>
+            <textarea class="form-control mb-2" id="devolucion-texto" rows="4" maxlength="2000" required></textarea>
+            <div class="text-end mb-4">
+              <button type="submit" class="btn btn-primary" id="btn-enviar-devolucion">Enviar</button>
+            </div>
+          </form>
+
+          <h3 class="h6">Devoluciones enviadas</h3>
+          <p id="devoluciones-cargando" class="text-body-secondary">Cargando…</p>
+          <p id="devoluciones-vacio" class="text-body-secondary d-none">Todavía no le enviaste ninguna.</p>
+          <ul id="lista-devoluciones" class="list-group"></ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmación para reabrir la Tarea finalizada de un estudiante (HU-016) -->
+  <div class="modal fade" id="modal-reabrir" tabindex="-1" aria-labelledby="modal-reabrir-titulo"
+       aria-describedby="modal-reabrir-texto" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="modal-reabrir-titulo">Reabrir Tarea</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="mensaje-reabrir" role="status" aria-live="polite"></div>
+          <p class="mb-0" id="modal-reabrir-texto"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="btn-cancelar-reabrir">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-confirmar-reabrir">Reabrir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HU-019: confirmar el (re)envío del enlace por correo a un estudiante -->
+  <div class="modal fade" id="modal-correo" tabindex="-1" aria-labelledby="modal-correo-titulo"
+       aria-describedby="modal-correo-texto" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="modal-correo-titulo">Enviar enlace por correo</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="mensaje-correo" role="status" aria-live="polite"></div>
+          <p class="mb-0" id="modal-correo-texto"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="btn-cancelar-correo">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-confirmar-correo">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/encabezado.js"></script>
+  <script src="js/metricas.js"></script>
+</body>
+</html>

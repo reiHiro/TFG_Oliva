@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nueva actividad — Apoyos Educativos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<body class="bg-body-tertiary">
+  <nav class="navbar encabezado shadow-sm" data-bs-theme="dark">
+    <div class="container">
+      <span class="navbar-brand mb-0 h1">Apoyos Educativos</span>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <span class="text-white" id="encabezado-saludo"></span>
+        <button type="button" class="btn btn-outline-light btn-sm" id="btn-cerrar-sesion">Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-7">
+        <p class="mb-3"><a href="panel-docente.html" id="enlace-volver">&larr; Volver a mis clases</a></p>
+
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <!-- Con ?id=N la página edita esa actividad (HU-015, actividad-nueva.js). -->
+            <h1 class="h4 mb-4" id="titulo-pagina">Nueva actividad</h1>
+
+            <div id="alerta" class="alert alert-danger d-none" role="alert"></div>
+
+            <!-- Solo en edición, si un estudiante ya la inició: recurso y pasos
+                 quedan deshabilitados y este texto explica por qué. -->
+            <div id="aviso-iniciada" class="alert alert-info d-none">
+              Esta actividad ya fue iniciada por un estudiante. Para cambiar los pasos o el recurso, duplicala.
+            </div>
+
+            <form id="form-actividad" novalidate>
+              <div class="mb-3">
+                <label for="clase_id" class="form-label">Clase</label>
+                <select class="form-select" id="clase_id" name="clase_id" required aria-required="true"
+                        aria-describedby="clase_id-ayuda clase_id-error">
+                  <option value="">Cargando clases…</option>
+                </select>
+                <!-- Vacío al crear. En edición lleva el motivo por el que el selector
+                     está deshabilitado (actividad-nueva.js), solo para lectores de
+                     pantalla; a la vista va como tooltip. -->
+                <div class="visually-hidden" id="clase_id-ayuda"></div>
+                <div class="invalid-feedback" id="clase_id-error" data-campo="clase_id"></div>
+              </div>
+
+              <div id="mensaje-clase" role="status" aria-live="polite"></div>
+
+              <div class="mb-3">
+                <label for="titulo" class="form-label">Título</label>
+                <input type="text" class="form-control" id="titulo" name="titulo" maxlength="150" required>
+                <div class="invalid-feedback" data-campo="titulo"></div>
+              </div>
+
+              <div class="mb-3">
+                <label for="consigna" class="form-label">Consigna</label>
+                <textarea class="form-control" id="consigna" name="consigna" rows="4" required></textarea>
+                <div class="invalid-feedback" data-campo="consigna"></div>
+              </div>
+
+              <div class="mb-3">
+                <label for="recurso_url" class="form-label">Enlace del recurso</label>
+                <input type="url" class="form-control" id="recurso_url" name="recurso_url"
+                       maxlength="2048" placeholder="https://..." required>
+                <div class="invalid-feedback" data-campo="recurso_url"></div>
+                <!-- Abre el recurso con "#vista-previa-lectura": la extensión muestra
+                     solo la vista de lectura limpia, sin registrar nada. Se
+                     habilita cuando el enlace es una URL http o https. -->
+                <div class="mt-2">
+                  <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-vista-previa"
+                          title="Abre el recurso en una pestaña nueva. Requiere la extensión instalada."
+                          aria-describedby="vista-previa-ayuda" disabled>Vista previa del modo lectura</button>
+                  <!-- La misma aclaración del tooltip, para lectores de pantalla. -->
+                  <span class="visually-hidden" id="vista-previa-ayuda">Abre el recurso en una pestaña nueva. Requiere la extensión instalada.</span>
+                </div>
+              </div>
+
+              <!-- Se puede cambiar siempre, también con la actividad ya iniciada:
+                   no altera el recurso ni los pasos. -->
+              <div class="form-check mb-2" title="El estudiante puede volver a la página original.">
+                <input class="form-check-input" type="checkbox" id="modo_lectura_inicial" name="modo_lectura_inicial"
+                       aria-describedby="modo_lectura_inicial-ayuda">
+                <label class="form-check-label" for="modo_lectura_inicial">Abrir en modo lectura al empezar</label>
+                <!-- La misma aclaración del tooltip, para lectores de pantalla. -->
+                <span class="visually-hidden" id="modo_lectura_inicial-ayuda">El estudiante puede volver a la página original.</span>
+                <div class="invalid-feedback" data-campo="modo_lectura_inicial"></div>
+              </div>
+
+              <!-- HU-018. También se puede cambiar siempre. Vale para los pasos que
+                   tienen una justificación cargada. -->
+              <div class="form-check mb-2" title="Al verla, el estudiante ya no puede cambiar la respuesta de ese paso.">
+                <input class="form-check-input" type="checkbox" id="mostrar_justificacion" name="mostrar_justificacion"
+                       aria-describedby="mostrar_justificacion-ayuda">
+                <label class="form-check-label" for="mostrar_justificacion">Mostrar la justificación al estudiante después de responder</label>
+                <!-- La misma aclaración del tooltip, para lectores de pantalla. -->
+                <span class="visually-hidden" id="mostrar_justificacion-ayuda">Al verla, el estudiante ya no puede cambiar la respuesta de ese paso.</span>
+                <div class="invalid-feedback" data-campo="mostrar_justificacion"></div>
+              </div>
+
+              <!-- HU-018. Cambia lo que tiene que hacer el estudiante: con la
+                   actividad ya iniciada queda bloqueada, como el recurso y los pasos. -->
+              <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="produccion_propia" name="produccion_propia"
+                       aria-describedby="produccion_propia-ayuda">
+                <label class="form-check-label" for="produccion_propia">Producción propia</label>
+                <div class="form-text mt-0" id="produccion_propia-ayuda">El estudiante justifica cada paso: cita el material o escribe con sus palabras (sin pegar).</div>
+                <div class="invalid-feedback" data-campo="produccion_propia"></div>
+                <!-- Solo con la casilla marcada (actividad-nueva.js). El material y,
+                     si es texto, cómo justifica el estudiante, forman la modalidad
+                     que se guarda (produccion_modo): cita_texto, texto_libre o
+                     momento_video. El selector y los radios no viajan solos. -->
+                <div class="mt-2 d-none" id="grupo-produccion-material">
+                  <label for="produccion_material" class="form-label mb-1">El material es</label>
+                  <select class="form-select form-select-sm w-auto" id="produccion_material">
+                    <option value="texto">Texto</option>
+                    <option value="medio">Video o audio</option>
+                  </select>
+                  <fieldset class="mt-2" id="grupo-produccion-texto">
+                    <legend class="form-label fs-6 mb-1">El estudiante</legend>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="produccion_texto" id="produccion_texto_cita"
+                             value="cita_texto" checked>
+                      <label class="form-check-label" for="produccion_texto_cita">Cita un fragmento del material</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="produccion_texto" id="produccion_texto_libre"
+                             value="texto_libre">
+                      <label class="form-check-label" for="produccion_texto_libre">Justifica con texto libre</label>
+                    </div>
+                  </fieldset>
+                  <div class="invalid-feedback" data-campo="produccion_modo"></div>
+                </div>
+              </div>
+
+              <fieldset class="mb-4" id="fieldset-pasos">
+                <legend class="form-label fs-6">Pasos</legend>
+                <ol id="lista-pasos" class="list-unstyled mb-2"></ol>
+                <div class="invalid-feedback" data-campo="pasos"></div>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-agregar-paso">
+                  + Agregar paso
+                </button>
+              </fieldset>
+
+              <div class="d-flex gap-2 justify-content-end">
+                <a href="panel-docente.html" class="btn btn-outline-secondary" id="enlace-cancelar">Cancelar</a>
+                <button type="submit" class="btn btn-primary" id="btn-enviar">Guardar actividad</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <template id="plantilla-paso">
+    <li class="paso mb-3">
+      <div class="input-group">
+        <span class="input-group-text gap-2">
+          <span class="numero-paso"></span>
+          <span class="badge rounded-pill text-bg-light border fw-normal etiqueta-tipo"></span>
+        </span>
+        <input type="text" class="form-control descripcion-paso" required>
+        <!-- Un paso nuevo arranca sin tipo: el docente lo elige (actividad-nueva.js). -->
+        <select class="form-select tipo-paso" required aria-required="true">
+          <option value="" selected disabled>Seleccionar tipo…</option>
+          <option value="opcion_unica">Opción única</option>
+          <option value="opcion_multiple">Opción múltiple</option>
+          <option value="verdadero_falso">Verdadero o falso</option>
+        </select>
+        <button type="button" class="btn btn-outline-secondary btn-quitar-paso">Quitar</button>
+      </div>
+      <div class="opciones-paso mt-2" hidden>
+        <!-- El texto cambia con el tipo (actividad-nueva.js): en opción única
+             la correcta se marca con un radio. -->
+        <p class="form-text mt-0 mb-1 ayuda-opciones">Entre 2 y 4 opciones. Marcá las correctas (al menos una).</p>
+        <ul class="lista-opciones list-unstyled mb-1"></ul>
+        <button type="button" class="btn btn-link btn-sm p-0 btn-agregar-opcion">+ Agregar opción</button>
+      </div>
+      <div class="verdadero-falso-paso mt-2" hidden>
+        <div class="d-flex align-items-center gap-2">
+          <span class="form-text m-0">¿Cuál es la correcta?</span>
+          <div class="btn-group btn-group-sm grupo-vf" role="group">
+            <input type="radio" class="btn-check correcta-vf" value="verdadero" autocomplete="off">
+            <label class="btn btn-outline-success">Verdadero</label>
+            <input type="radio" class="btn-check correcta-vf" value="falso" autocomplete="off">
+            <label class="btn btn-outline-success">Falso</label>
+          </div>
+        </div>
+      </div>
+      <!-- HU-018: opcional. El id y el for los pone actividad-nueva.js. -->
+      <div class="mt-2">
+        <label class="form-label small mb-1 etiqueta-justificacion">Justificación (fragmento del material)
+          <span class="text-body-secondary">· opcional</span></label>
+        <textarea class="form-control form-control-sm justificacion-paso" rows="2" maxlength="2000"></textarea>
+      </div>
+    </li>
+  </template>
+
+  <template id="plantilla-opcion">
+    <li class="mb-1">
+      <div class="input-group input-group-sm">
+        <div class="input-group-text">
+          <input type="checkbox" class="form-check-input mt-0 correcta-opcion">
+        </div>
+        <input type="text" class="form-control texto-opcion" maxlength="255" required>
+        <button type="button" class="btn btn-outline-secondary btn-quitar-opcion">Quitar</button>
+      </div>
+    </li>
+  </template>
+
+  <script src="js/api.js"></script>
+  <script src="js/encabezado.js"></script>
+  <script src="js/clases.js"></script>
+  <script src="js/actividad-nueva.js"></script>
+</body>
+</html>

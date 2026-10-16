@@ -1,0 +1,4 @@
+backend/config/secreto.php
+backend/config/correo.php
+backend/correos_salida/*
+!backend/correos_salida/.htaccess

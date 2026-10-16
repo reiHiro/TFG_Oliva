@@ -1,0 +1,30 @@
+Readability.js
+==============
+
+Librería de Mozilla que extrae el contenido principal de una página (la que
+usa la vista de lectura de Firefox). La extensión la usa para la "Vista de
+lectura limpia" del apoyo Modo lectura (content_script.js).
+
+Origen:   https://github.com/mozilla/readability
+Versión:  0.6.0 (tag 0.6.0, commit 04fd32f72b448c12b02ba6c40928b67e510bac49)
+Licencia: Apache License 2.0 (LICENCIA-Readability.md es el LICENSE.md del
+          repositorio; texto completo en https://www.apache.org/licenses/LICENSE-2.0)
+
+Archivos, sin modificar respecto del tag:
+
+  Readability.js
+    URL:     https://raw.githubusercontent.com/mozilla/readability/0.6.0/Readability.js
+    SHA-256: 34dcab3d0832d0019f02990eed6b6124e029e8c32b9f0c6f2550544ff8dff174
+    Blob de git: ad32a65c6b094139204ee8af9ae0d2c3a2d72da9
+
+  LICENCIA-Readability.md (LICENSE.md en el repositorio)
+    URL:     https://raw.githubusercontent.com/mozilla/readability/0.6.0/LICENSE.md
+    SHA-256: a5b1e8181751ce05b85b7bfaa832b785e87086250a5148e679d17ca9bdcfa958
+    Blob de git: ca8e58b203b6d96bca8a838b1104496e32dab70d
+
+Va dentro de la extensión porque Manifest V3 no permite cargar código
+remoto. No se edita: para actualizarla, se reemplazan los dos archivos por
+los de otro tag y se actualizan estos datos. .gitattributes evita que git
+les cambie los fines de línea.
+
+Comprobación:  sha256sum extension/vendor/Readability.js

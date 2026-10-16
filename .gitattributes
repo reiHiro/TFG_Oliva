@@ -1,0 +1,8 @@
+# Librerías de terceros: se guardan byte a byte como las publicó su autor
+# (sin convertir fines de línea), para poder comparar su SHA-256.
+extension/vendor/Readability.js -text
+extension/vendor/LICENCIA-Readability.md -text
+backend/lib/phpmailer/PHPMailer.php -text
+backend/lib/phpmailer/SMTP.php -text
+backend/lib/phpmailer/Exception.php -text
+backend/lib/phpmailer/LICENSE -text

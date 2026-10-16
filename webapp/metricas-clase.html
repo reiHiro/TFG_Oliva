@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Métricas de la clase — Apoyos Educativos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<body class="bg-body-tertiary">
+  <nav class="navbar encabezado shadow-sm" data-bs-theme="dark">
+    <div class="container">
+      <span class="navbar-brand mb-0 h1">Apoyos Educativos</span>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <span class="text-white" id="encabezado-saludo"></span>
+        <button type="button" class="btn btn-outline-light btn-sm" id="btn-cerrar-sesion">Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Métricas sumadas de las actividades elegidas en clase.html:
+       metricas-clase.html?clase=N&actividades=1,2,3 -->
+  <main class="container py-5">
+    <a href="panel-docente.html" class="d-inline-block mb-3" id="enlace-volver">&larr; Volver a mis clases</a>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+      <div>
+        <h1 class="h4 mb-1">Métricas de la clase</h1>
+        <p class="mb-1" id="clase-nombre"></p>
+        <p class="text-body-secondary small mb-0" id="actividades-elegidas"></p>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <small class="text-body-secondary" id="ultima-actualizacion"></small>
+        <button type="button" class="btn btn-primary" id="btn-actualizar">Actualizar</button>
+      </div>
+    </div>
+
+    <div id="alerta" class="alert d-none" role="alert"></div>
+
+    <p id="cargando" class="text-body-secondary">Cargando métricas…</p>
+
+    <div id="contenido" class="d-none">
+      <!-- Resumen general -->
+      <div class="row row-cols-1 row-cols-md-3 row-cols-xl-5 g-3 mb-4">
+        <div class="col">
+          <div class="card shadow-sm indicador h-100">
+            <div class="card-body indicador-centrado">
+              <p class="text-body-secondary mb-1">Actividades elegidas</p>
+              <p class="h3 mb-0" id="ind-actividades">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm indicador h-100">
+            <div class="card-body indicador-centrado">
+              <p class="text-body-secondary mb-1">Estudiantes involucrados</p>
+              <p class="h3 mb-0" id="ind-estudiantes">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm indicador h-100">
+            <div class="card-body indicador-centrado">
+              <p class="text-body-secondary mb-1">Tareas finalizadas</p>
+              <p class="h3 mb-0" id="ind-tareas">0 de 0</p>
+              <small class="text-body-secondary" id="ind-tareas-detalle"></small>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm indicador h-100">
+            <div class="card-body indicador-centrado">
+              <p class="text-body-secondary mb-1">Tiempo en foco total</p>
+              <p class="h3 mb-0" id="ind-foco-total">00:00</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-sm indicador h-100">
+            <div class="card-body indicador-centrado">
+              <p class="text-body-secondary mb-1">Tiempo en foco promedio por estudiante</p>
+              <p class="h3 mb-0" id="ind-foco-promedio">00:00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <!-- Una fila por actividad elegida (tema): alto máximo fijo (.panel-dificultad-clase
+             en estilos.css); el título queda arriba y la lista scrollea por dentro. -->
+        <div class="col-lg-7">
+          <div class="card shadow-sm indicador indicador-dificultad panel-dificultad-clase h-100">
+            <div class="card-body">
+              <h2 class="h6 text-body-secondary fw-normal mb-3">Temas con más dificultad</h2>
+              <div class="lista-dificultad-scroll" tabindex="0" role="region"
+                   aria-label="Temas con más dificultad, lista desplazable">
+                <ol id="lista-dificultad" class="list-unstyled mb-0"></ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="card shadow-sm indicador h-100">
+            <div class="card-body">
+              <h2 class="h6 text-body-secondary fw-normal mb-3">Apoyos usados</h2>
+              <p id="apoyos-vacio" class="text-body-secondary small mb-0 d-none">Nadie usó ningún apoyo.</p>
+              <ul id="lista-apoyos" class="list-group"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p id="vacio" class="text-body-secondary d-none">
+        Sin estudiantes asignados.
+      </p>
+
+      <div id="contenedor-tabla" class="card shadow-sm d-none">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th scope="col">Estudiante</th>
+                <th scope="col" title="Sobre las actividades que tiene asignadas">Tareas finalizadas</th>
+                <th scope="col" style="min-width: 10rem;" title="Sobre los pasos de sus actividades">Pasos</th>
+                <th scope="col" title="Sobre los pasos que respondió">Correctas</th>
+                <th scope="col">Tiempo en foco</th>
+                <th scope="col">Apoyos usados</th>
+              </tr>
+            </thead>
+            <tbody id="lista-estudiantes"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/encabezado.js"></script>
+  <script src="js/metricas-clase.js"></script>
+</body>
+</html>

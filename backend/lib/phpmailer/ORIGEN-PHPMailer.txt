@@ -1,0 +1,40 @@
+PHPMailer
+=========
+
+Librería para mandar correos desde PHP (SMTP, codificación MIME, texto plano
+y HTML). El backend la usa para enviarle a cada estudiante el enlace de una
+actividad al asignarla (HU-019, config/correo_envio.php).
+
+Origen:   https://github.com/PHPMailer/PHPMailer
+Versión:  6.12.0 (tag v6.12.0, commit d1ac35d784bf9f5e61b424901d5a014967f15b12)
+Licencia: GNU LGPL 2.1 (LICENSE es el del repositorio)
+
+Archivos, sin modificar respecto del tag (los tres .php vienen de src/):
+
+  PHPMailer.php
+    URL:     https://raw.githubusercontent.com/PHPMailer/PHPMailer/v6.12.0/src/PHPMailer.php
+    SHA-256: 451486c23f7f82e822ddb0667237714d2ce265920c9ed9cf1128b4c5fc46b657
+    Blob de git: 4b3f34c88dee18b8bb83102d495aacad1db81739
+
+  SMTP.php
+    URL:     https://raw.githubusercontent.com/PHPMailer/PHPMailer/v6.12.0/src/SMTP.php
+    SHA-256: db2f51574ce9e004d32432dea93b354644aa0e05bc311e900b1254c77e5ad51d
+    Blob de git: d8749c5ba2b8d195a9662bae27b4a599655de18c
+
+  Exception.php
+    URL:     https://raw.githubusercontent.com/PHPMailer/PHPMailer/v6.12.0/src/Exception.php
+    SHA-256: 22ab858ae438d98f58f41f38ad2191d1b0d59570aebea0463a7948cfae1021b7
+    Blob de git: 09c1a2cfefaa986c846b41743e856c945beff3cd
+
+  LICENSE
+    URL:     https://raw.githubusercontent.com/PHPMailer/PHPMailer/v6.12.0/LICENSE
+    SHA-256: a1a33180d02960ab1c5de36cf20b1a2f0fe9888d83826ad263da5db52f1b183b
+    Blob de git: f166cc57b2783565bc48e8999103c572fca4c0e4
+
+Se incluye en el proyecto en lugar de instalarla con Composer. Se cargan los
+tres archivos con require_once (sin autoload). No se edita: para
+actualizarla, se reemplazan los cuatro archivos por los de otro tag y se
+actualizan estos datos. .gitattributes evita que git les cambie los fines de
+línea. ../.htaccess impide pedirlos por web.
+
+Comprobación:  sha256sum backend/lib/phpmailer/*.php backend/lib/phpmailer/LICENSE

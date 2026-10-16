@@ -1,0 +1,17 @@
+[
+  { "palabra": "humedal", "definicion": "Terreno que está cubierto de agua todo el año o parte del año, como un bañado, una laguna o un estero.", "sinonimo": "bañado", "pictograma": "🌾" },
+  { "palabra": "ecosistema", "definicion": "Lugar donde viven juntos plantas, animales y otros seres vivos, y que se relacionan entre sí y con el agua, el suelo y el aire.", "sinonimo": "ambiente natural", "pictograma": "🌍" },
+  { "palabra": "biodiversidad", "definicion": "La gran variedad de seres vivos distintos que hay en un lugar.", "sinonimo": "variedad de vida", "pictograma": "🦋" },
+  { "palabra": "especie", "definicion": "Grupo de seres vivos que son parecidos entre sí y pueden tener crías juntos.", "sinonimo": "tipo de ser vivo", "pictograma": "🐾" },
+  { "palabra": "hábitat", "definicion": "El lugar donde vive naturalmente un animal o una planta.", "sinonimo": "hogar", "pictograma": "🏡" },
+  { "palabra": "flora", "definicion": "Todas las plantas que crecen en un lugar.", "sinonimo": "plantas", "pictograma": "🌿" },
+  { "palabra": "fauna", "definicion": "Todos los animales que viven en un lugar.", "sinonimo": "animales", "pictograma": "🦆" },
+  { "palabra": "anfibio", "definicion": "Animal que puede vivir en el agua y en la tierra, como la rana o el sapo.", "sinonimo": "animal de agua y tierra", "pictograma": "🐸" },
+  { "palabra": "migración", "definicion": "Viaje que hacen algunos animales, como las aves, de un lugar a otro en cierta época del año.", "sinonimo": "viaje", "pictograma": "🕊️" },
+  { "palabra": "contaminación", "definicion": "Cuando el agua, el aire o el suelo se ensucian con basura o sustancias que hacen daño.", "sinonimo": "suciedad", "pictograma": "🏭" },
+  { "palabra": "sequía", "definicion": "Tiempo largo en el que casi no llueve y falta agua.", "sinonimo": "falta de agua", "pictograma": "☀️" },
+  { "palabra": "inundación", "definicion": "Cuando el agua cubre lugares que normalmente están secos.", "sinonimo": "crecida", "pictograma": "🌊" },
+  { "palabra": "nutriente", "definicion": "Sustancia que los seres vivos necesitan para crecer y estar sanos.", "sinonimo": "alimento", "pictograma": "🥕" },
+  { "palabra": "conservación", "definicion": "Cuidar la naturaleza para que no se dañe ni desaparezca.", "sinonimo": "cuidado", "pictograma": "🤲" },
+  { "palabra": "vegetación", "definicion": "El conjunto de plantas que cubre un terreno.", "sinonimo": "plantas", "pictograma": "🌳" }
+]
