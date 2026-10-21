@@ -1,4 +1,4 @@
-# Sistema Integrado de Apoyos Digitales y Métricas Pedagógicas
+# Sistema Integrado de Apoyos Digitales y Métricas para la Educación Inclusiva
 
 Prototipo de Trabajo Final de Grado (Licenciatura en Informática).
 
