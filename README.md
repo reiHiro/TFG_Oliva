@@ -4,7 +4,7 @@ Prototipo de Trabajo Final de Grado (Licenciatura en Informática).
 
 Una extensión de navegador da **apoyos de accesibilidad** a los estudiantes
 mientras resuelven una actividad sobre contenido web. Una aplicación web les
-muestra a los docentes **métricas pedagógicas** de esas actividades.
+muestra a los docentes **métricas del proceso** de esas actividades.
 
 ## Qué hace
 
